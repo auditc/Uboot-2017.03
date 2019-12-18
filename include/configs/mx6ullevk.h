@@ -6,6 +6,9 @@
  *
  * SPDX-License-Identifier:	GPL-2.0+
  */
+/*#define DEBUG*/
+#define ET_DEBUG
+#define MII_DEBUG
 #ifndef __MX6ULLEVK_CONFIG_H
 #define __MX6ULLEVK_CONFIG_H
 
@@ -325,7 +328,7 @@
 
 #if (CONFIG_FEC_ENET_DEV == 0)
 #define IMX_FEC_BASE			ENET_BASE_ADDR
-#define CONFIG_FEC_MXC_PHYADDR          0x2
+#define CONFIG_FEC_MXC_PHYADDR          0x0
 #define CONFIG_FEC_XCV_TYPE             RMII
 #ifdef CONFIG_DM_ETH
 #define CONFIG_ETHPRIME			"eth0"
@@ -344,7 +347,9 @@
 #endif
 
 #define CONFIG_PHYLIB
-#define CONFIG_PHY_MICREL
+#define CONFIG_LIB_RAND
+#define CONFIG_NET_RANDOM_ETHADDR
+#define CONFIG_PHY_SMSC
 #define CONFIG_FEC_MXC_MDIO_BASE ENET2_BASE_ADDR
 #endif
 

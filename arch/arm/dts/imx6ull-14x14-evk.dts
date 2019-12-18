@@ -170,7 +170,9 @@
 
 &fec1 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_enet1>;
+	pinctrl-0 = <&pinctrl_enet1
+			 &pinctrl_fec1_reset>;
+	phy-reset-gpios = <&gpio5 9  GPIO_ACTIVE_LOW>;
 	phy-mode = "rmii";
 	phy-handle = <&ethphy0>;
 	status = "okay";
@@ -178,7 +180,9 @@
 
 &fec2 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_enet2>;
+	pinctrl-0 = <&pinctrl_enet2
+			 &pinctrl_fec2_reset >;
+	phy-reset-gpios = <&gpio5 6  GPIO_ACTIVE_LOW>;
 	phy-mode = "rmii";
 	phy-handle = <&ethphy1>;
 	status = "okay";
@@ -189,7 +193,7 @@
 
 		ethphy0: ethernet-phy@2 {
 			compatible = "ethernet-phy-ieee802.3-c22";
-			reg = <2>;
+			reg = <0>;
 		};
 
 		ethphy1: ethernet-phy@1 {
@@ -599,14 +603,26 @@
                                 MX6ULL_PAD_SNVS_TAMPER3__GPIO5_IO03      0x79
                         >;
                 };
-		
+#if 0		
+//Conflicts with ENT1 RST pin
 		pinctrl_lcdif_reset: lcdifresetgrp {
                         fsl,pins = <
                                 /* used for lcd reset */
                                 MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09  0x79
                         >;
                 };
+#endif
+		pinctrl_fec1_reset: fec1_resetgrp {
+			fsl,pins = <
+				MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09	0x79
+			>;
+		};
 
+		pinctrl_fec2_reset: fec2_resetgrp {
+			fsl,pins = <
+				MX6ULL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x79
+			>;
+		};
 		pinctrl_spi4: spi4grp {
                         fsl,pins = <
                                 MX6ULL_PAD_BOOT_MODE0__GPIO5_IO10        0x70a1
@@ -628,8 +644,8 @@
 &lcdif {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_lcdif_dat
-		     &pinctrl_lcdif_ctrl
-		     &pinctrl_lcdif_reset>;
+		     &pinctrl_lcdif_ctrl>;
+//&pinctrl_lcdif_reset
 	display = <&display0>;
 	status = "okay";
 
