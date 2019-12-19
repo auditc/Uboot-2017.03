@@ -127,9 +127,12 @@
 	"script=boot.scr\0" \
 	"image=zImage\0" \
 	"console=ttymxc0\0" \
+	"eth1addr=82:ed:b4:5b:81:ea\0" \
+	"ethact=ethernet@020b4000\0" \
+	"ethprime=eth1\0" \
 	"fdt_high=0xffffffff\0" \
 	"initrd_high=0xffffffff\0" \
-	"fdt_file=undefined\0" \
+	"fdt_file=100ask_imx6ull-14x14.dtb\0" \
 	"fdt_addr=0x83000000\0" \
 	"tee_addr=0x84000000\0" \
 	"tee_file=uTee-6ullevk\0" \
@@ -175,31 +178,10 @@
 	"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
 		"netboot=echo Booting from net ...; " \
 		"run netargs; " \
-		"if test ${ip_dyn} = yes; then " \
-			"setenv get_cmd dhcp; " \
-		"else " \
 			"setenv get_cmd tftp; " \
-		"fi; " \
 		"${get_cmd} ${image}; " \
-		"if test ${tee} = yes; then " \
-			"${get_cmd} ${tee_addr} ${tee_file}; " \
 			"${get_cmd} ${fdt_addr} ${fdt_file}; " \
-			"bootm ${tee_addr} - ${fdt_addr}; " \
-		"else " \
-			"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
-				"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
-					"bootz ${loadaddr} - ${fdt_addr}; " \
-				"else " \
-					"if test ${boot_fdt} = try; then " \
-						"bootz; " \
-					"else " \
-						"echo WARN: Cannot load the DT; " \
-					"fi; " \
-				"fi; " \
-			"else " \
-				"bootz; " \
-			"fi; " \
-		"fi;\0" \
+		"bootz ${loadaddr} - ${fdt_addr}; \0" \
 		"findfdt="\
 			"if test $fdt_file = undefined; then " \
 				"if test $board_name = EVK && test $board_rev = 9X9; then " \
@@ -347,8 +329,8 @@
 #endif
 
 #define CONFIG_PHYLIB
-#define CONFIG_LIB_RAND
-#define CONFIG_NET_RANDOM_ETHADDR
+/*#define CONFIG_LIB_RAND
+#define CONFIG_NET_RANDOM_ETHADDR */
 #define CONFIG_PHY_SMSC
 #define CONFIG_FEC_MXC_MDIO_BASE ENET2_BASE_ADDR
 #endif
