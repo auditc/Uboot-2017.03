@@ -3,12 +3,9 @@
  * Copyright 2017-2018 NXP
  *
  * Configuration settings for the Freescale i.MX6UL 14x14 EVK board.
- *
+ * #define DEBUG
  * SPDX-License-Identifier:	GPL-2.0+
  */
-/*#define DEBUG*/
-#define ET_DEBUG
-#define MII_DEBUG
 #ifndef __MX6ULLEVK_CONFIG_H
 #define __MX6ULLEVK_CONFIG_H
 
@@ -70,7 +67,7 @@
 #define CONFIG_POWER_PFUZE3000_I2C_ADDR  0x08
 #endif
 
-#define CONFIG_SYS_MMC_IMG_LOAD_PART	1
+#define CONFIG_SYS_MMC_IMG_LOAD_PART	2
 
 #ifdef CONFIG_NAND_BOOT
 #define MFG_NAND_PARTITION "mtdparts=gpmi-nand:64m(boot),16m(kernel),16m(dtb),16m(tee),-(rootfs) "
@@ -127,9 +124,7 @@
 	"script=boot.scr\0" \
 	"image=zImage\0" \
 	"console=ttymxc0\0" \
-	"eth1addr=82:ed:b4:5b:81:ea\0" \
-	"ethact=ethernet@020b4000\0" \
-	"ethprime=eth1\0" \
+	"bootdir=/boot\0" \
 	"fdt_high=0xffffffff\0" \
 	"initrd_high=0xffffffff\0" \
 	"fdt_file=100ask_imx6ull-14x14.dtb\0" \
@@ -150,8 +145,8 @@
 		"fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
 	"bootscript=echo Running bootscript from mmc ...; " \
 		"source\0" \
-	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
-	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
+	"loadimage=ext2load mmc ${mmcdev}:${mmcpart} ${loadaddr} ${bootdir}/${image}\0" \
+	"loadfdt=ext2load mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${bootdir}/${fdt_file}\0" \
 	"loadtee=fatload mmc ${mmcdev}:${mmcpart} ${tee_addr} ${tee_file}\0" \
 	"mmcboot=echo Booting from mmc ...; " \
 		"run mmcargs; " \
@@ -181,7 +176,7 @@
 			"setenv get_cmd tftp; " \
 		"${get_cmd} ${image}; " \
 			"${get_cmd} ${fdt_addr} ${fdt_file}; " \
-		"bootz ${loadaddr} - ${fdt_addr}; \0" \
+		 " bootz ${loadaddr} - ${fdt_addr};\0"\
 		"findfdt="\
 			"if test $fdt_file = undefined; then " \
 				"if test $board_name = EVK && test $board_rev = 9X9; then " \
@@ -189,7 +184,7 @@
 				"if test $board_name = EVK && test $board_rev = 14X14; then " \
 					"setenv fdt_file imx6ull-14x14-evk.dtb; fi; " \
 				"if test $fdt_file = undefined; then " \
-					"echo WARNING: Could not determine dtb to use; " \
+					"setenv fdt_file imx6ull-14x14-alpha.dtb; " \
 				"fi; " \
 			"fi;\0" \
 
@@ -329,8 +324,8 @@
 #endif
 
 #define CONFIG_PHYLIB
-/*#define CONFIG_LIB_RAND
-#define CONFIG_NET_RANDOM_ETHADDR */
+#define CONFIG_LIB_RAND
+#define CONFIG_NET_RANDOM_ETHADDR
 #define CONFIG_PHY_SMSC
 #define CONFIG_FEC_MXC_MDIO_BASE ENET2_BASE_ADDR
 #endif
