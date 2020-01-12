@@ -416,7 +416,7 @@ void do_enable_parallel_lcd(struct display_info_t const *dev)
 
 	/* Set Brightness to high */
 	gpio_request(IMX_GPIO_NR(1, 8), "backlight");
-	gpio_direction_output(IMX_GPIO_NR(1, 8) , 1);
+	gpio_direction_output(IMX_GPIO_NR(1, 8) , 0); /* 100ask disable lcd */
 }
 
 struct display_info_t const displays[] = {{
