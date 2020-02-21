@@ -134,6 +134,8 @@
 	"boot_fdt=try\0" \
 	"ip_dyn=yes\0" \
 	"panel=TFT43AB\0" \
+    "ethaddr=00:01:1f:2d:3e:4d\0" \
+    "eth1addr=00:01:3f:2d:3e:4d\0" \    
 	"mmcdev="__stringify(CONFIG_SYS_MMC_ENV_DEV)"\0" \
 	"mmcpart=" __stringify(CONFIG_SYS_MMC_IMG_LOAD_PART) "\0" \
 	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
