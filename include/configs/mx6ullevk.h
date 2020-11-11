@@ -99,7 +99,7 @@
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	CONFIG_MFG_ENV_SETTINGS \
 	TEE_ENV \
-	"panel=TFT43AB\0" \
+	"panel=TFT7016\0" \
 	"fdt_addr=0x83000000\0" \
 	"fdt_high=0xffffffff\0"	  \
 	"console=ttymxc0\0" \
@@ -121,6 +121,7 @@
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	CONFIG_MFG_ENV_SETTINGS \
 	TEE_ENV \
+	"update=undefined\0" \
 	"script=boot.scr\0" \
 	"image=zImage\0" \
 	"console=ttymxc0\0" \
@@ -133,13 +134,13 @@
 	"tee_file=uTee-6ullevk\0" \
 	"boot_fdt=try\0" \
 	"ip_dyn=yes\0" \
-	"panel=TFT43AB\0" \
+	"panel=TFT7016\0" \
     "ethaddr=00:01:1f:2d:3e:4d\0" \
     "eth1addr=00:01:3f:2d:3e:4d\0" \
 	"mmcdev="__stringify(CONFIG_SYS_MMC_ENV_DEV)"\0" \
 	"mmcpart=" __stringify(CONFIG_SYS_MMC_IMG_LOAD_PART) "\0" \
 	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
-	"mmcautodetect=yes\0" \
+	"mmcautodetect=no\0" \
 	"mmcargs=setenv bootargs console=${console},${baudrate} " \
 		BOOTARGS_CMA_SIZE \
 		"root=${mmcroot}\0" \
@@ -169,6 +170,10 @@
 				"bootz; " \
 			"fi; " \
 		"fi;\0" \
+        "updateset="\
+                "if test $update = undefined; then " \
+                        "setenv update yes; saveenv; " \
+                "fi;\0" \
 	"netargs=setenv bootargs console=${console},${baudrate} " \
 		BOOTARGS_CMA_SIZE \
 		"root=/dev/nfs " \
@@ -191,6 +196,7 @@
 			"fi;\0" \
 
 #define CONFIG_BOOTCOMMAND \
+	   "run updateset;"\
 	   "run findfdt;" \
 	   "run findtee;" \
 	   "mmc dev ${mmcdev};" \

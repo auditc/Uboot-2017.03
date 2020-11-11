@@ -408,15 +408,10 @@ void do_enable_parallel_lcd(struct display_info_t const *dev)
 
 	imx_iomux_v3_setup_multiple_pads(lcd_pads, ARRAY_SIZE(lcd_pads));
 
-	/* Reset the LCD */
-	gpio_request(IMX_GPIO_NR(5, 9), "lcd reset");
-	gpio_direction_output(IMX_GPIO_NR(5, 9) , 0);
-	udelay(500);
-	gpio_direction_output(IMX_GPIO_NR(5, 9) , 1);
 
 	/* Set Brightness to high */
 	gpio_request(IMX_GPIO_NR(1, 8), "backlight");
-	gpio_direction_output(IMX_GPIO_NR(1, 8) , 0); /* 100ask disable lcd */
+	gpio_direction_output(IMX_GPIO_NR(1, 8) , 1); /* 100ask disable lcd */
 }
 
 struct display_info_t const displays[] = {{
@@ -426,7 +421,26 @@ struct display_info_t const displays[] = {{
 	.detect = NULL,
 	.enable	= do_enable_parallel_lcd,
 	.mode	= {
-		.name			= "TFT43AB",
+		.name		= "TFT7016",
+		.xres           = 1024,
+		.yres           = 600,
+		.pixclock       = 19531,
+		.left_margin    = 140,
+		.right_margin   = 160,
+		.upper_margin   = 20,
+		.lower_margin   = 12,
+		.hsync_len      = 20,
+		.vsync_len      = 3,
+		.sync           = 0,
+		.vmode          = FB_VMODE_NONINTERLACED
+} },{
+	.bus = MX6UL_LCDIF1_BASE_ADDR,
+	.addr = 0,
+	.pixfmt = 24,
+	.detect = NULL,
+	.enable = do_enable_parallel_lcd,
+	.mode   = {
+		.name           = "TFT43AB",
 		.xres           = 480,
 		.yres           = 272,
 		.pixclock       = 108695,
@@ -438,7 +452,8 @@ struct display_info_t const displays[] = {{
 		.vsync_len      = 10,
 		.sync           = 0,
 		.vmode          = FB_VMODE_NONINTERLACED
-} } };
+} }};
+
 size_t display_count = ARRAY_SIZE(displays);
 #endif
 
